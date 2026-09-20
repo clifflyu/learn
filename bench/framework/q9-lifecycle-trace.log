@@ -1,0 +1,126 @@
+   0.008 ms  [01] public/index.php：define(LARAVEL_START)，请求从这里开始
+   0.209 ms  [02] require vendor/autoload.php（Composer）
+  66.289 ms  [03] autoload 注册完成
+  66.624 ms  [04] bootstrap/app.php：Application::configure() 开始组装
+  79.536 ms  [05] new Application()：容器诞生
+ 104.590 ms  [06] bootstrap/app.php 执行完，拿到 Application 实例
+ 104.640 ms  [07] $app->handleRequest(Request::capture())
+ 161.133 ms  [07b] Application::handleRequest()：容器解析出 Illuminate\Foundation\Http\Kernel
+ 161.185 ms  [08] Illuminate\Foundation\Http\Kernel::handle()：请求进入 Kernel
+ 247.139 ms  [09] Kernel::sendRequestThroughRouter()：把 request 实例绑进容器
+ 248.760 ms  [10] Kernel::bootstrap() 开始
+ 248.834 ms  [11] ├─ bootstrapper: Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables
+ 265.911 ms  [11] ├─ bootstrapper: Illuminate\Foundation\Bootstrap\LoadConfiguration
+ 330.079 ms  [11] ├─ bootstrapper: Illuminate\Foundation\Bootstrap\HandleExceptions
+ 332.087 ms  [11] ├─ bootstrapper: Illuminate\Foundation\Bootstrap\RegisterFacades
+ 337.916 ms  [11] ├─ bootstrapper: Illuminate\Foundation\Bootstrap\RegisterProviders
+ 433.844 ms  [11] ├─ bootstrapper: Illuminate\Foundation\Bootstrap\BootProviders
+ 518.531 ms  [15] bootstrap 全部完成
+ 518.682 ms  [16] 全局中间件 Pipeline（8 个）：ValidatePathEncoding → InvokeDeferredCallbacks → TrustProxies → HandleCors → PreventRequestsDuringMaintenance → ValidatePostSize → TrimStrings → ConvertEmptyStringsToNull
+ 525.427 ms         ▶ 进入 Illuminate\Http\Middleware\ValidatePathEncoding
+ 526.619 ms         ▶ 进入 Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
+ 528.229 ms         ▶ 进入 Illuminate\Http\Middleware\TrustProxies
+ 530.759 ms         ▶ 进入 Illuminate\Http\Middleware\HandleCors
+ 535.276 ms         ▶ 进入 Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
+ 537.940 ms         ▶ 进入 Illuminate\Http\Middleware\ValidatePostSize
+ 539.192 ms         ▶ 进入 Illuminate\Foundation\Http\Middleware\TrimStrings
+ 539.771 ms         ▶ 进入 Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
+ 539.876 ms  [17] Router::dispatchToRoute()：开始匹配 GET /lifecycle
+ 551.752 ms  [18] 命中路由 GET|HEAD lifecycle  →  Closure
+ 555.902 ms  [19] 路由中间件 Pipeline（7 个）：EncryptCookies → AddQueuedCookiesToResponse → StartSession → ShareErrorsFromSession → PreventRequestForgery → SubstituteBindings → Q9RouteMiddleware
+ 560.722 ms         ▶ 进入 Illuminate\Cookie\Middleware\EncryptCookies
+ 562.938 ms         ▶ 进入 Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse
+ 565.311 ms         ▶ 进入 Illuminate\Session\Middleware\StartSession
+ 642.329 ms         ▶ 进入 Illuminate\View\Middleware\ShareErrorsFromSession
+ 643.642 ms         ▶ 进入 Illuminate\Foundation\Http\Middleware\PreventRequestForgery
+ 644.297 ms         ▶ 进入 Illuminate\Routing\Middleware\SubstituteBindings
+ 647.188 ms         ▶ 进入 App\Http\Middleware\Q9RouteMiddleware
+ 647.270 ms         [route middleware] Q9RouteMiddleware 前置
+ 648.820 ms         ★★ 控制器（路由闭包）执行 —— 业务代码在这里
+ 674.140 ms  [19b] Router::prepareResponse()：路由返回值 → Response 对象
+ 675.086 ms         [route middleware] Q9RouteMiddleware 后置
+ 675.146 ms         ◀ 离开 App\Http\Middleware\Q9RouteMiddleware
+ 675.190 ms         ◀ 离开 Illuminate\Routing\Middleware\SubstituteBindings
+ 679.996 ms         ◀ 离开 Illuminate\Foundation\Http\Middleware\PreventRequestForgery
+ 680.084 ms         ◀ 离开 Illuminate\View\Middleware\ShareErrorsFromSession
+ 700.832 ms         ◀ 离开 Illuminate\Session\Middleware\StartSession
+ 700.935 ms         ◀ 离开 Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse
+ 701.635 ms         ◀ 离开 Illuminate\Cookie\Middleware\EncryptCookies
+ 701.705 ms  [19b] Router::prepareResponse()：路由返回值 → Response 对象
+ 701.995 ms         ◀ 离开 Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
+ 702.085 ms         ◀ 离开 Illuminate\Foundation\Http\Middleware\TrimStrings
+ 702.115 ms         ◀ 离开 Illuminate\Http\Middleware\ValidatePostSize
+ 702.143 ms         ◀ 离开 Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
+ 702.166 ms         ◀ 离开 Illuminate\Http\Middleware\HandleCors
+ 702.183 ms         ◀ 离开 Illuminate\Http\Middleware\TrustProxies
+ 702.199 ms         ◀ 离开 Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
+ 702.214 ms         ◀ 离开 Illuminate\Http\Middleware\ValidatePathEncoding
+ 702.714 ms  [20] Kernel::handle() 返回 Illuminate\Http\Response status=200，准备 send()
+ 703.096 ms  [21] $response->send()：响应已写出
+ 703.151 ms  [22a] Kernel::terminate()：跑 terminable 中间件
+ 707.957 ms  [22] Kernel::terminate() 完成
+ 708.037 ms  [23] handleRequest() 返回，index.php 结束
+
+===== 第 2 次请求（同一个 worker，OPcache 已热）=====
+   0.003 ms  [01] public/index.php：define(LARAVEL_START)，请求从这里开始
+   0.146 ms  [02] require vendor/autoload.php（Composer）
+   6.790 ms  [03] autoload 注册完成
+   6.962 ms  [04] bootstrap/app.php：Application::configure() 开始组装
+   9.003 ms  [05] new Application()：容器诞生
+  14.116 ms  [06] bootstrap/app.php 执行完，拿到 Application 实例
+  14.173 ms  [07] $app->handleRequest(Request::capture())
+  20.292 ms  [07b] Application::handleRequest()：容器解析出 Illuminate\Foundation\Http\Kernel
+  20.567 ms  [08] Illuminate\Foundation\Http\Kernel::handle()：请求进入 Kernel
+  25.194 ms  [09] Kernel::sendRequestThroughRouter()：把 request 实例绑进容器
+  25.423 ms  [10] Kernel::bootstrap() 开始
+  25.467 ms  [11] ├─ bootstrapper: Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables
+  30.830 ms  [11] ├─ bootstrapper: Illuminate\Foundation\Bootstrap\LoadConfiguration
+  40.093 ms  [11] ├─ bootstrapper: Illuminate\Foundation\Bootstrap\HandleExceptions
+  40.337 ms  [11] ├─ bootstrapper: Illuminate\Foundation\Bootstrap\RegisterFacades
+  41.028 ms  [11] ├─ bootstrapper: Illuminate\Foundation\Bootstrap\RegisterProviders
+  50.681 ms  [11] ├─ bootstrapper: Illuminate\Foundation\Bootstrap\BootProviders
+  61.195 ms  [15] bootstrap 全部完成
+  61.299 ms  [16] 全局中间件 Pipeline（8 个）：ValidatePathEncoding → InvokeDeferredCallbacks → TrustProxies → HandleCors → PreventRequestsDuringMaintenance → ValidatePostSize → TrimStrings → ConvertEmptyStringsToNull
+  62.131 ms         ▶ 进入 Illuminate\Http\Middleware\ValidatePathEncoding
+  62.526 ms         ▶ 进入 Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
+  62.793 ms         ▶ 进入 Illuminate\Http\Middleware\TrustProxies
+  63.457 ms         ▶ 进入 Illuminate\Http\Middleware\HandleCors
+  63.865 ms         ▶ 进入 Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
+  65.271 ms         ▶ 进入 Illuminate\Http\Middleware\ValidatePostSize
+  65.620 ms         ▶ 进入 Illuminate\Foundation\Http\Middleware\TrimStrings
+  65.852 ms         ▶ 进入 Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
+  65.961 ms  [17] Router::dispatchToRoute()：开始匹配 GET /lifecycle
+  67.402 ms  [18] 命中路由 GET|HEAD lifecycle  →  Closure
+  68.228 ms  [19] 路由中间件 Pipeline（7 个）：EncryptCookies → AddQueuedCookiesToResponse → StartSession → ShareErrorsFromSession → PreventRequestForgery → SubstituteBindings → Q9RouteMiddleware
+  68.850 ms         ▶ 进入 Illuminate\Cookie\Middleware\EncryptCookies
+  69.430 ms         ▶ 进入 Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse
+  69.765 ms         ▶ 进入 Illuminate\Session\Middleware\StartSession
+  80.372 ms         ▶ 进入 Illuminate\View\Middleware\ShareErrorsFromSession
+  80.869 ms         ▶ 进入 Illuminate\Foundation\Http\Middleware\PreventRequestForgery
+  81.105 ms         ▶ 进入 Illuminate\Routing\Middleware\SubstituteBindings
+  81.708 ms         ▶ 进入 App\Http\Middleware\Q9RouteMiddleware
+  81.770 ms         [route middleware] Q9RouteMiddleware 前置
+  82.506 ms         ★★ 控制器（路由闭包）执行 —— 业务代码在这里
+  84.952 ms  [19b] Router::prepareResponse()：路由返回值 → Response 对象
+  85.443 ms         [route middleware] Q9RouteMiddleware 后置
+  85.493 ms         ◀ 离开 App\Http\Middleware\Q9RouteMiddleware
+  85.526 ms         ◀ 离开 Illuminate\Routing\Middleware\SubstituteBindings
+  86.213 ms         ◀ 离开 Illuminate\Foundation\Http\Middleware\PreventRequestForgery
+  86.270 ms         ◀ 离开 Illuminate\View\Middleware\ShareErrorsFromSession
+ 102.641 ms         ◀ 离开 Illuminate\Session\Middleware\StartSession
+ 102.724 ms         ◀ 离开 Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse
+ 103.054 ms         ◀ 离开 Illuminate\Cookie\Middleware\EncryptCookies
+ 103.111 ms  [19b] Router::prepareResponse()：路由返回值 → Response 对象
+ 103.302 ms         ◀ 离开 Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull
+ 103.350 ms         ◀ 离开 Illuminate\Foundation\Http\Middleware\TrimStrings
+ 103.387 ms         ◀ 离开 Illuminate\Http\Middleware\ValidatePostSize
+ 103.414 ms         ◀ 离开 Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance
+ 103.440 ms         ◀ 离开 Illuminate\Http\Middleware\HandleCors
+ 103.465 ms         ◀ 离开 Illuminate\Http\Middleware\TrustProxies
+ 103.489 ms         ◀ 离开 Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks
+ 103.515 ms         ◀ 离开 Illuminate\Http\Middleware\ValidatePathEncoding
+ 103.709 ms  [20] Kernel::handle() 返回 Illuminate\Http\Response status=200，准备 send()
+ 103.947 ms  [21] $response->send()：响应已写出
+ 103.998 ms  [22a] Kernel::terminate()：跑 terminable 中间件
+ 105.648 ms  [22] Kernel::terminate() 完成
+ 105.718 ms  [23] handleRequest() 返回，index.php 结束

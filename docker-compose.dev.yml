@@ -15,3 +15,51 @@ services:
       PHP_MEMORY_LIMIT: 512M
       PHP_UPLOAD_MAX_FILESIZE: 64M
       PHP_POST_MAX_SIZE: 64M
+    depends_on:
+      learn-mysql:
+        condition: service_healthy
+      learn-redis:
+        condition: service_healthy
+
+  learn-mysql:
+    image: docker.m.daocloud.io/library/mysql:8.4
+    container_name: learn-mysql
+    restart: always
+    ports:
+      - "9312:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: learn
+      TZ: Asia/Shanghai
+    volumes:
+      # 数据目录：库、表、binlog、慢日志都在这里，容器重建不丢
+      - ./data/mysql:/var/lib/mysql
+      # 配置：改完重启容器即可生效，不用改 compose
+      - ./docker/mysql/conf.d:/etc/mysql/conf.d:ro
+      # 初始化脚本：仅在数据目录为空时执行（首次启动）
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  learn-redis:
+    image: docker.m.daocloud.io/library/redis:7
+    container_name: learn-redis
+    restart: always
+    ports:
+      - "9313:6379"
+    volumes:
+      # 持久化目录：dump.rdb 与 appendonlydir/ 都在这里
+      - ./data/redis:/data
+      # 配置：AOF / RDB / 内存策略等改动持久化到这里
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - ./:/app
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20

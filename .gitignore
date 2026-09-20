@@ -1,0 +1,6 @@
+# 容器持久化数据：MySQL 数据目录、Redis 的 dump.rdb 与 appendonlydir/
+# 这些是运行期产物，体积大且不该进版本库
+/data/
+
+# 实测脚本生成的 PHP fixtures（bench/_fixtures.php 自动重建）
+/bench/_gen/
