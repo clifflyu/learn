@@ -701,4 +701,4 @@ Service 里写 `$vip = (bool) ($_SERVER['HTTP_X_VIP'] ?? false);`，在 CLI/队�
 | Laravel 里 Repository 有必要吗？ | Eloquent 本身就是 Active Record + Repository 混合体。**规则简单就别套**；需要换存储、需要给领域层隔离 ORM 时才值得 |
 | 领域异常怎么变成 HTTP 状态码？ | 在 `bootstrap/app.php` 的 `->withExceptions()` 里统一映射（`DomainException` → 409，`InvalidArgumentException` → 422），**别在 Controller 里逐个 catch** |
 | 分层和微服务的边界是一回事吗？ | 同源。分层是"进程内的依赖方向"，微服务是"进程间的依赖方向"，都是让依赖指向稳定的一端 |
-| 怎么防止后来的人破坏分层？ | 架构测试（PHPArkitect / Deptrac）写进 CI：禁止 `App\Http` 引用 `PDO`、禁止 `App\Domain` 引用 `Illuminate\Http` |
+| 怎么防止后来的人破坏分层？ | 架构测试（PHPArkitect / Deptrac）写进 CI：禁止 `App\Http` 引用 `PDO`、禁止 `App\Domain` 引用 `Illuminate\Http`（**未实测**，本环境没装这两个工具） |

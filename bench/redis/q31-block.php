@@ -7,14 +7,18 @@
 //   redis-cli 每次都要 fork+exec+连接，量出来恒等于 4~5ms 的进程启动开销，
 //   服务端真正花了多久完全被盖住。这里换成：
 //     · 操作耗时     → 由操作进程自己的持久连接测（不含进程启动）
-//     · 服务端耗时   → 由 04-bigkey.sh 读 SLOWLOG
+//     · 服务端耗时   → 由 q31-delcost.php 读 SLOWLOG
 //     · 旁人的延迟尖峰 → 一个独立进程用持久连接做紧循环 PING，按 20ms 分桶记最大值
 //   三条线互相印证，不是同一个数换个说法。
+//
+// victim 用 hash 而不是 list：同样的元素数，quicklist 把元素打包进 listpack，
+// 删 500k 元素的 list 只要 72 微秒，根本堵不住人；hashtable 每元素一个节点，
+// 删 500k 字段的 hash 要 145 毫秒。要演示「大 Key 卡死实例」，得用后者。
 
 require __DIR__ . '/_conn.php';
 
 $P      = 'q31:';
-$N      = (int)($argv[1] ?? 3000000);
+$N      = (int)($argv[1] ?? 500000);
 $BUCKET = 20;      // ms
 $RUN    = 1600;    // 探测窗口总长
 $ACT    = 700;     // 在第 700ms 时发起 DEL / UNLINK
@@ -24,11 +28,11 @@ function pipe_cmds(Redis $r, array $cmds): void {
     foreach ($cmds as $c) $r->rawCommand(...$c);
     $r->exec();
 }
-function build_list(Redis $r, string $key, int $n): void {
+function build_hash(Redis $r, string $key, int $n): void {
     $r->del($key);
     $chunk = [];
     for ($i = 0; $i < $n; $i++) {
-        $chunk[] = ['RPUSH', $key, "v$i"];
+        $chunk[] = ['HSET', $key, "f$i", "v$i"];
         if (count($chunk) >= 5000) { pipe_cmds($r, $chunk); $chunk = []; }
     }
     if ($chunk) pipe_cmds($r, $chunk);
@@ -38,11 +42,11 @@ $r = rconn();
 prefix_cleanup($r, $P);
 
 echo "===== 删大 Key 时，别的客户端被堵多久（Redis 7.4.11）=====\n";
-echo "victim 是一个 {$N} 元素的 list；探测进程在 20ms 一档上记最坏 PING 往返。\n";
-echo "探针和操作者都是持久连接，都不含进程启动开销。\n";
+echo "victim 是一个 {$N} 字段的 hash（hashtable，每字段一个节点）；\n";
+echo "探测进程在 {$BUCKET}ms 一档上记最坏 PING 往返。探针和操作者都是持久连接，都不含进程启动开销。\n";
 
 foreach (['DEL', 'UNLINK'] as $op) {
-    build_list($r, "{$P}victim", $N);
+    build_hash($r, "{$P}victim", $N);
     $sz = (int)$r->rawCommand('MEMORY', 'USAGE', "{$P}victim", 'SAMPLES', '0');
     $r->del("{$P}blk:done", "{$P}blk:op");
 

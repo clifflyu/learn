@@ -111,14 +111,19 @@ printf("  Redis info：connected_clients 已回落，队列剩余 %d\n", $r->lLe
 
 $seqs = array_map('intval', $r->lRange($ORDER, 0, -1));
 $bad  = 0;
+$badAt = [];
 for ($i = 1; $i < count($seqs); $i++) {
     if ($seqs[$i] < $seqs[$i - 1]) {
         $bad++;
+        if (count($badAt) < 5) {
+            $badAt[] = sprintf('#%d: %d→%d', $i, $seqs[$i - 1], $seqs[$i]);
+        }
     }
 }
 printf("  记录到的处理顺序 %d 条，相邻逆序对 = %d → 乱序率 %.2f%%\n",
     count($seqs), $bad, 100 * $bad / max(1, count($seqs) - 1));
 printf("  前 20 条的处理顺序：%s\n", implode(',', array_slice($seqs, 0, 20)));
+printf("  前 5 个逆序位置：%s\n", implode('  ', $badAt));
 printf("  ↑ 多消费者抢同一个 List，谁先抢到谁先处理，顺序完全不可控\n\n");
 
 // ============================================================ 3) 单消费者

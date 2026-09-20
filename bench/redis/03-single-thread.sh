@@ -96,7 +96,7 @@ for i in $(seq 1 6); do
         'BEGIN{printf "  %-5s %11.0f %11.0f %7sx | %11.0f %11.0f %7sx\n", i, a, b, x, c, d, y}'
 done
 printf "  6 轮中位倍数： pipeline 64 深 = %sx（理论天花板 64）   并发 50 = %sx\n" "$(med "$RA")" "$(med "$RD")"
-echo "  ↑ 单连接开着 -P 1 时，100%% 的时间都花在「发出去→等回来」上，Redis 本体闲着；"
+echo "  ↑ 单连接开着 -P 1 时，约 99% 的时间都花在「发出去→等回来」上，Redis 本体闲着；"
 echo "    pipeline 把 RTT 摊薄，才吃到 Redis 的真正处理能力。"
 
 echo
